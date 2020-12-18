@@ -5,6 +5,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ahorcado.model.entities.Jugador;
@@ -19,6 +20,9 @@ public class JugadorService {
 	
 	@Autowired
 	private PartidaService partidaService;
+	
+	@Value("${server.address}") 
+	String servidorIP;
 	
 	protected Logger logger;
 	
@@ -99,16 +103,20 @@ public class JugadorService {
 	 */	
 	public Jugador startGame(Integer id) {		
 		Jugador jugador = jugadorRepo.findById(id).get();
-		
-		if (jugador.getPartida() != null) {
-			partidaService.deleteGame(jugador.getPartida().getId());
-		}	
-		
-		Partida partida = new Partida();
-		partida = partidaService.initialize(partida);
+		if (jugador.getActive() && jugador.getIp() != servidorIP) {
+			if (jugador.getPartida() != null && jugador.getActive() && jugador.getIp() != servidorIP) {
+				partidaService.deleteGame(jugador.getPartida().getId());
+				
+			}				
+			Partida partida = new Partida();
+			partida = partidaService.initialize(partida);
+			
+			jugador.setPartida(partida);
 
+		} else {
+			logger.warn("INTENTO DE EMPEZAR UN JUEGO NO AUTORIZADO: "+ jugador);
+		}
 		
-		jugador.setPartida(partida);
 		jugadorRepo.save(jugador);
 		
 		return jugador;
