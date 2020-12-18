@@ -1,5 +1,7 @@
 package com.ahorcado.service;
 
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -24,8 +26,20 @@ public class JugadorService {
 	@Value("${server.address}") 
 	String servidorIP;
 	
+	
 	protected Logger logger;
 	
+	//Only for test
+		public void setJugadorRepo(JugadorRepository jugadorRepo) {
+			this.jugadorRepo = jugadorRepo;
+		}
+		public void setPartidaService(PartidaService partidaService) {
+			this.partidaService = partidaService;
+		}
+		public void setLogger(Logger logger) {
+			this.logger = logger;
+		}
+
 	/**
 	 * 
 	 * Logger para avisar de las peticiones de login y registro
@@ -50,7 +64,7 @@ public class JugadorService {
 	public Jugador register(String username, String password) {
 		Jugador jugador = null;
 		
-		if (jugadorRepo.existsJugadorByUsername(username)) {
+		if (jugadorRepo.existsJugadorByUsername(username) || username.equals("") || password.equals("")) {
 			return jugador;
 		} else {
 			jugador = new Jugador(username, password);
@@ -102,11 +116,11 @@ public class JugadorService {
 	 * @return Jugador
 	 */	
 	public Jugador startGame(Integer id) {		
-		Jugador jugador = jugadorRepo.findById(id).get();
+		Optional<Jugador> jugadorOpt = jugadorRepo.findById(id);
+		Jugador jugador = jugadorOpt.get();
 		if (jugador.getActive() && jugador.getIp() != servidorIP) {
 			if (jugador.getPartida() != null && jugador.getActive() && jugador.getIp() != servidorIP) {
 				partidaService.deleteGame(jugador.getPartida().getId());
-				
 			}				
 			Partida partida = new Partida();
 			partida = partidaService.initialize(partida);

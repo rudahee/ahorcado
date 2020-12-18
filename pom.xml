@@ -48,6 +48,17 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+    <groupId>org.junit.platform</groupId>
+    <artifactId>junit-platform-launcher</artifactId>
+    <scope>test</scope>
+</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -56,7 +67,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
+		</plugins><!--$NO-MVN-MAN-VER$-->
 	</build>
 
 </project>

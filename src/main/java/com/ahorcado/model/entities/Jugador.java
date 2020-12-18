@@ -87,6 +87,12 @@ public class Jugador implements Serializable {
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
+
+	@Override
+	public String toString() {
+		return "Jugador [id=" + id + ", ip=" + ip + ", username=" + username + ", password=" + password + ", active="
+				+ active + ", partida=" + partida + "]";
+	}
 	
 
 }

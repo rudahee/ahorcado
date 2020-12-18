@@ -10,6 +10,8 @@ import com.ahorcado.model.entities.Jugador;
 public interface JugadorRepository extends CrudRepository<Jugador, Integer>{
 
 	public boolean existsJugadorByUsername(String username);
+	
+	
 	public Jugador findJugadorByUsername(String username);
 
 }
