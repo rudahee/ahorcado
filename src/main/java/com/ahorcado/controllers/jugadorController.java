@@ -3,10 +3,8 @@ package com.ahorcado.controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ahorcado.model.entities.Jugador;
+import com.ahorcado.service.HistoricService;
 import com.ahorcado.service.JugadorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,6 +29,9 @@ public class jugadorController {
 
 	@Autowired
 	private JugadorService jugadorService;
+	
+	@Autowired
+	private HistoricService historicoService;
 
 	@GetMapping("")
 	public ResponseEntity<?> login(@RequestBody Jugador data, HttpServletRequest request) throws JsonProcessingException {
@@ -55,6 +57,8 @@ public class jugadorController {
 		}
 		
 		((ObjectNode) body).put("Player", mapper.writeValueAsString(jugador));
+		
+		historicoService.addEntryLogin(jugador);
 		
 		return ResponseEntity.status(status).body(body);
 	}
@@ -82,6 +86,9 @@ public class jugadorController {
 		
 		((ObjectNode) body).put("Player", mapper.writeValueAsString(jugador));
 
+		historicoService.addEntryRegister(jugador);
+
+		
 		return ResponseEntity.status(status).body(body);
 	}
 
@@ -107,6 +114,8 @@ public class jugadorController {
 		}
 		
 		((ObjectNode) body).put("Game:", mapper.writeValueAsString(jugador.getPartida()));
+		
+		historicoService.addEntryStartGame(jugador);
 		
 		return ResponseEntity.status(status).body(body);
 	}

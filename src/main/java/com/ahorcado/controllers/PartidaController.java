@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ahorcado.model.entities.Partida;
+import com.ahorcado.service.HistoricService;
 import com.ahorcado.service.PartidaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -27,6 +28,8 @@ public class PartidaController {
 
 	@Autowired
 	private PartidaService partidaService;
+	@Autowired
+	private HistoricService historicoService;
 	
 	private ObjectMapper mapper = new ObjectMapper();	
 
@@ -56,6 +59,8 @@ public class PartidaController {
 		
 		((ObjectNode) body).put("Game:", mapper.writeValueAsString(partida));
 
+		historicoService.addEntryLetter(partida, data);
+		
 		return ResponseEntity.status(status).body(body);
 	}
 	
@@ -92,6 +97,8 @@ public class PartidaController {
 		}
 		
 		((ObjectNode) body).put("Game:", mapper.writeValueAsString(partida));
+		
+		historicoService.addEntryWord(partida, data);
 		
 		return ResponseEntity.status(status).body(body);
 	}

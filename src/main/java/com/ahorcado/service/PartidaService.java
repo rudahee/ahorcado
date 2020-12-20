@@ -197,7 +197,7 @@ public class PartidaService {
 	private boolean isValidIp(Integer pId) throws UnknownHostException {
 		String jugadorIP = partidaRepo.findById(pId).get().getJugadores().get(0).getIp();
 				
-		if (jugadorIP.equals(servidorIP))
+		if (!jugadorIP.equals(servidorIP))
 			return false;
 		else
 			return true;
